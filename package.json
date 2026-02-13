@@ -1,0 +1,14 @@
+{
+  "name": "vishwaexpo",
+  "version": "1.0.5",
+  "description": "Custom Node.js framework by Ansh",
+  "main": "myserver.js",
+  "type": "module",
+  "keywords": [
+    "node",
+    "framework",
+    "express-like"
+  ],
+  "author": "Ansh Vishwakarma",
+  "license": "MIT"
+}
