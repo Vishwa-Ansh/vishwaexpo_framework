@@ -22,8 +22,8 @@
 
 <p align="center">
   <b>Fast • Lightweight • Beginner Friendly</b>
-</p>" width="160"/>
-</p>
+</p> 
+
 
 
 
