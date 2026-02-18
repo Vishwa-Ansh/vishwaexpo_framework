@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="/Users/vishwaansh/nodeCode/vishwaNodeFramework/logo.png" width="120"/>
+  <img src="https://github.com/Vishwa-Ansh/vishwaexpo_framework/blob/a275c0bd34ff1648e34a71d863ceb06c0ed6fed2/logo.png" width="120"/>
 </p>
 
 <p align="center">
