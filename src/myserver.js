@@ -2,15 +2,15 @@ import http from "http";
 import url from "url";
 import fs from "fs";
 import path from "path";
+import querystring from "querystring";
 
 function createApp() {
     const routes = [];
     const middlewares = [];
     const sessions = {};
 
-    //////////////////////////////////////
+
     // MAIN SERVER FUNCTION
-    //////////////////////////////////////
     const app = async (req, res) => {
 
         // Parse URL
@@ -18,22 +18,44 @@ function createApp() {
         req.path = parsedUrl.pathname;
         req.query = parsedUrl.query;
 
-        //////////////////////////////////////
-        // Response Helpers (IMPORTANT)
-        //////////////////////////////////////
+        // Response Helpers (OLD + NEW)
+        res.status = (code) => {
+            res.statusCode = code;
+            return res;
+        };
+
+        res.json = (data) => {
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify(data));
+        };
+
+        // OLD behavior preserved
         res.send = (data) => {
             if (typeof data === "object") {
-                res.setHeader("Content-Type", "application/json");
-                res.end(JSON.stringify(data));
+                res.json(data);
             } else {
                 res.setHeader("Content-Type", "text/html");
                 res.end(data);
             }
         };
 
-        //////////////////////////////////////
-        // Session (simple)
-        //////////////////////////////////////
+        // NEW (safe)
+        res.redirect = (location) => {
+            res.statusCode = 302;
+            res.setHeader("Location", location);
+            res.end();
+        };
+
+        res.sendFile = (filePath) => {
+            if (fs.existsSync(filePath)) {
+                fs.createReadStream(filePath).pipe(res);
+            } else {
+                res.statusCode = 404;
+                res.end("File not found");
+            }
+        };
+
+        // Session (OLD)
         const cookie = req.headers.cookie;
         if (cookie && sessions[cookie]) {
             req.session = sessions[cookie];
@@ -43,41 +65,49 @@ function createApp() {
             res.setHeader("Set-Cookie", id);
             req.session = sessions[id];
         }
-
-        //////////////////////////////////////
-        // JSON Body Parser
-        //////////////////////////////////////
+        // Body Parser (JSON + Form)
         if (req.method !== "GET") {
             let body = "";
             for await (const chunk of req) {
                 body += chunk;
             }
+
+            const type = req.headers["content-type"] || "";
+
             try {
-                req.body = JSON.parse(body || "{}");
+                if (type.includes("application/json")) {
+                    req.body = JSON.parse(body || "{}");
+                } else if (type.includes("application/x-www-form-urlencoded")) {
+                    req.body = querystring.parse(body);
+                } else {
+                    req.body = body;
+                }
             } catch {
                 req.body = {};
             }
         }
-
-        //////////////////////////////////////
-        // Middleware Runner
-        //////////////////////////////////////
+        // Middleware Runner (error safe)
         let i = 0;
         const next = () => {
             if (i < middlewares.length) {
-                middlewares[i++](req, res, next);
+                try {
+                    middlewares[i++](req, res, next);
+                } catch (err) {
+                    res.statusCode = 500;
+                    res.end("Internal Server Error");
+                }
             } else {
                 handleRoute();
             }
         };
 
-        //////////////////////////////////////
         // Route Handler
-        //////////////////////////////////////
         const handleRoute = () => {
 
             const route = routes.find(r => {
-                if (r.method !== req.method) return false;
+
+                // support app.all()
+                if (r.method !== req.method && r.method !== "ALL") return false;
 
                 const routeParts = r.path.split("/");
                 const urlParts = req.path.split("/");
@@ -106,9 +136,7 @@ function createApp() {
         next();
     };
 
-    //////////////////////////////////////
-    // ROUTING
-    //////////////////////////////////////
+    // ROUTING (OLD + NEW)
     app.get = (path, handler) => {
         routes.push({ method: "GET", path, handler });
     };
@@ -117,16 +145,35 @@ function createApp() {
         routes.push({ method: "POST", path, handler });
     };
 
-    //////////////////////////////////////
+    // NEW (safe)
+    app.put = (path, handler) => {
+        routes.push({ method: "PUT", path, handler });
+    };
+
+    app.delete = (path, handler) => {
+        routes.push({ method: "DELETE", path, handler });
+    };
+
+    app.patch = (path, handler) => {
+        routes.push({ method: "PATCH", path, handler });
+    };
+
+    app.all = (path, handler) => {
+        routes.push({ method: "ALL", path, handler });
+    };
+
     // MIDDLEWARE
-    //////////////////////////////////////
     app.use = (fn) => {
         middlewares.push(fn);
     };
 
-    //////////////////////////////////////
-    // STATIC FILES
-    //////////////////////////////////////
+    // DEFAULT LOGGER (safe)
+    app.use((req, res, next) => {
+        console.log(req.method, req.url);
+        next();
+    });
+
+    // STATIC FILES (OLD)
     app.static = (folder) => {
         app.use((req, res, next) => {
             const filePath = path.join(folder, req.path);
@@ -151,9 +198,7 @@ function createApp() {
         });
     };
 
-    //////////////////////////////////////
-    // TEMPLATE RENDER
-    //////////////////////////////////////
+    // TEMPLATE RENDER (OLD)
     app.render = (res, file, data) => {
         let html = fs.readFileSync(file, "utf-8");
 
@@ -165,9 +210,7 @@ function createApp() {
         res.end(html);
     };
 
-    //////////////////////////////////////
     // SERVER START
-    //////////////////////////////////////
     app.listen = (port, cb) => {
         http.createServer(app).listen(port, cb);
     };
