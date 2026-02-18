@@ -1,10 +1,51 @@
 <p align="center">
-  <img src="https://github.com/Vishwa-Ansh/vishwaexpo_framework/blob/a275c0bd34ff1648e34a71d863ceb06c0ed6fed2/logo.png" width="120"/>
+  <img src="<p align="center">
+  <img src="https://raw.githubusercontent.com/Vishwa-Ansh/vishwaexpo_framework/main/logo.png" width="160"/>
+</p>
+
+<h1 align="center">VishwaExpo</h1>
+
+<p align="center">
+  Minimal Express-like Node.js framework built from scratch
 </p>
 
 <p align="center">
-  Minimal Express-like Node.js framework
+  <a href="https://www.npmjs.com/package/vishwaexpo">
+    <img src="https://img.shields.io/npm/v/vishwaexpo?color=blue&label=npm%20version" />
+  </a>
+  <a href="https://www.npmjs.com/package/vishwaexpo">
+    <img src="https://img.shields.io/npm/dw/vishwaexpo?color=green&label=downloads" />
+  </a>
+  <img src="https://img.shields.io/npm/l/vishwaexpo?color=orange&label=license" />
+  <img src="https://img.shields.io/badge/node-%3E%3D14-brightgreen" />
 </p>
+
+<p align="center">
+  <b>Fast • Lightweight • Beginner Friendly</b>
+</p>" width="160"/>
+</p>
+
+<h1 align="center">VishwaExpo</h1>
+
+<p align="center">
+  Minimal Express-like Node.js framework built from scratch
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/vishwaexpo">
+    <img src="https://img.shields.io/npm/v/vishwaexpo?color=blue&label=npm%20version" />
+  </a>
+  <a href="https://www.npmjs.com/package/vishwaexpo">
+    <img src="https://img.shields.io/npm/dw/vishwaexpo?color=green&label=downloads" />
+  </a>
+  <img src="https://img.shields.io/npm/l/vishwaexpo?color=orange&label=license" />
+  <img src="https://img.shields.io/badge/node-%3E%3D14-brightgreen" />
+</p>
+
+<p align="center">
+  <b>Fast • Lightweight • Beginner Friendly</b>
+</p>
+
 
 # Vishwa Framework
 
