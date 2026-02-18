@@ -1,6 +1,6 @@
 <p align="center">
   <img src="<p align="center">
-  <img src="https://raw.githubusercontent.com/Vishwa-Ansh/vishwaexpo_framework/main/logo.png" width="160"/>
+  <img src="https://raw.githubusercontent.com/Vishwa-Ansh/vishwaexpo_framework/main/logo.png" width="220"/>
 </p>
 
 <h1 align="center">VishwaExpo</h1>
